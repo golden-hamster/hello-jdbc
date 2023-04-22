@@ -24,7 +24,7 @@ class MemberRepositoryV1Test {
     @BeforeEach
     void beforeEach() {
         //기본 DriverManager - 항상 새로운 커넥션 획득
-//       DriverManagerDataSource dataSource = new DriverManagerDataSource(URL, USERNAME, PASSWORD);
+//      DriverManagerDataSource dataSource = new DriverManagerDataSource(URL, USERNAME, PASSWORD);
 
         //커넥션 풀링
         HikariDataSource dataSource = new HikariDataSource();
