@@ -1,9 +1,7 @@
 package hello.jdbc.service;
 
 import hello.jdbc.domain.Member;
-import hello.jdbc.repository.MemberRepository;
 import hello.jdbc.repository.MemberRepositoryV3;
-import hello.jdbc.repository.MemberRepositoryV4_1;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
@@ -12,21 +10,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
-import org.springframework.jdbc.datasource.DataSourceTransactionManager;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
-import org.springframework.transaction.PlatformTransactionManager;
 
 import javax.sql.DataSource;
 import java.sql.SQLException;
 
-import static hello.jdbc.connection.ConnectionConst.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 /**
- * 예외 누수 문제 해결
- * SQLException 제거
- * MemberRepository 인터페이스 의존
+ * 트랜잭션 - DataSource, transactionManager 자동 등록
  */
 @Slf4j
 @SpringBootTest
@@ -37,9 +29,9 @@ class MemberServiceV3_4Test {
     public static final String MEMBER_EX = "ex";
 
     @Autowired
-    private MemberRepository memberRepository;
+    private MemberRepositoryV3 memberRepository;
     @Autowired
-    private MemberServiceV4 memberService;
+    private MemberServiceV3_3 memberService;
 
     @TestConfiguration
     static class TestConfig {
@@ -51,13 +43,13 @@ class MemberServiceV3_4Test {
         }
 
         @Bean
-        MemberRepository memberRepository() {
-            return new MemberRepositoryV4_1(dataSource);
+        MemberRepositoryV3 memberRepositoryV3() {
+            return new MemberRepositoryV3(dataSource);
         }
 
         @Bean
-        MemberServiceV4 memberServiceV4() {
-            return new MemberServiceV4(memberRepository());
+        MemberServiceV3_3 memberServiceV3_3() {
+            return new MemberServiceV3_3(memberRepositoryV3());
         }
     }
 
